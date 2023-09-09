@@ -16,12 +16,23 @@ export default class CategoryList extends Component {
 
     state = {
         categories:
-            [
-                {categoryId:1, categoryName:"Beverages"},
-                {categoryId:2, categoryName:"Condime"},
-            ],
+            // [
+            //     {categoryId:1, categoryName:"Beverages"},
+            //     {categoryId:2, categoryName:"Condime"},
+            // ],
+            [],
         // currentCategory: ""
     };
+
+    componentDidMount() { // bu bir lifecycle methodudur, react componenti ilk olusturdugunda calısır
+        this.getCategories();
+    }
+
+    getCategories = () => {
+        fetch("http://localhost:3000/categories")
+            .then(response => response.json()) // gelen respon icin repsonsu json a dondur
+            .then(data => this.setState({categories: data})); // gelen datayı set et
+    }
 
     // () parantez ac kapa bu bir fonksiyondur demek, karsılıgı ise arrowdan snrası sonucu
     // changeCategory = (category) => {
@@ -39,9 +50,10 @@ export default class CategoryList extends Component {
                 <ListGroup>
                     { // map bir dongudur dondugu elemanları yeni bir nesne yapıp aarray gibi dıondurur
                         //.map(category => bu her bir categry icin demek arrow dan sonra yapılcak seyi vericez)
-                        this.state.categories.map(category => (
+                        this.state.categories.map(category => ( // map bir arraya uygulanır bakas biey geliyorsa hata alınablşir, map bir array function
                             // <ListGroupItem onClick={()=>this.setState({currentCategory: category.categoryName})} key={category.categoryId}>{category.categoryName}</ListGroupItem>
-                            <ListGroupItem onClick={()=>this.props.changeCategory(category)} key={category.categoryId}>{category.categoryName}</ListGroupItem>
+                            <ListGroupItem active={ category.categoryName === this.props.currentCategory?true:false }
+                                onClick={()=>this.props.changeCategory(category)} key={category.id}>{category.categoryName}</ListGroupItem>
 
                         ))
                     }

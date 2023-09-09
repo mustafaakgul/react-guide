@@ -8,13 +8,41 @@ import {Col, Container, Row} from "reactstrap";
 // compoennttler arası veri tasımadan dolayı burası class compoentnte cevrildi yani export defaul yazıma
 export default class App extends Component{
 
-    state = { currentCategory: ""}
+    //cart nesnesini en ustte olugu icin app burdan navi ye gondercez orda gostercez
+    state = { currentCategory: "", products: [], cart: []} //bos products arrayi ve map ile bunu snradan kullanmak
 
     //changecategry eski haliyleyazamıyorduk bu yuzden bunu cevirdik bu hale, root elementtaen asagı state tasımak icini, yukarı tasıma olmaıdıgndan, category degisitirmeye yonelk her seyi app icine tasıdırk
     changeCategory = (category) => {
         this.setState({currentCategory: category.categoryName})
+        this.getProducts(category.id); // bunu buraya ekleyerek, getproduct cagırdık onun icinde state degismisti state degisincede diger sayfadaki render bir daha calıstırabilmiş olacagız, react o stati kullanan her yeri kendi güncellemiş olacaktı
     }
     //js de fonksiyonlarda bir degisken oldugunda props gibi bunu tasıyabiliriz altta ornegi var
+
+    componentDidMount() {
+        this.getProducts();
+    }
+
+    getProducts = (categoryId) => { // bunu bir props ile productlist compoentnine yollamak lazım
+
+        let url = "http://localhost:3000/products";
+        if (categoryId) {
+            url += "?categoryId=" + categoryId;
+        }
+        fetch(url)
+            .then(response => response.json()) // gelen respon icin repsonsu json a dondur
+            .then(data => this.setState({products: data})); // gelen datayı set et
+    }
+
+    addToCart = (product) => { //bunu asagıda prop ile yollayacagız karsı taraftanda props. ile alacagız
+        let newCart = this.state.cart;
+        var addedItem = newCart.find(c => c.product.id === product.id); // her bir cart item c icin bul
+        if (addedItem) {
+            addedItem.quantity += 1;
+        } else {
+            newCart.push({product: product, quantity: 1});
+        }
+        this.setState({cart: newCart});
+    }
 
     render() {
         //best practice encapsulation like class, dic
@@ -27,16 +55,14 @@ export default class App extends Component{
                 {/*<Navi></Navi>*/}
                 {/*<Navi></Navi>*/}
                 <Container>
-                    <Row>
-                        <Navi/>
-                    </Row>
+                    <Navi cart={this.state.cart}/>
                     <Row>
                         {/*<Col xs="3"><CategoryList title="Category List"/></Col>*/}
                         {/*<Col xs="9"><ProductList title="Product List"/></Col>*/}
                         {/*<Col xs="3"><CategoryList title={titleCategory}/></Col>*/}
                         {/*<Col xs="9"><ProductList title={titleProduct}/></Col>*/}
                         <Col xs="3"><CategoryList currentCategory={this.state.currentCategory} changeCategory={this.changeCategory} info={categoryInfo}/></Col>
-                        <Col xs="9"><ProductList currentCategory={this.state.currentCategory} info={productInfo}/></Col>
+                        <Col xs="9"><ProductList products={this.state.products} addToCart={this.addToCart} currentCategory={this.state.currentCategory} info={productInfo}/></Col>
                     </Row>
                 </Container>
 
