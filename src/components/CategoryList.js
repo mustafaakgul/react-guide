@@ -20,7 +20,7 @@ export default class CategoryList extends Component {
                 {categoryId:1, categoryName:"Beverages"},
                 {categoryId:2, categoryName:"Condime"},
             ],
-        currentCategory: ""
+        // currentCategory: ""
     };
 
     // () parantez ac kapa bu bir fonksiyondur demek, karsılıgı ise arrowdan snrası sonucu
@@ -41,7 +41,7 @@ export default class CategoryList extends Component {
                         //.map(category => bu her bir categry icin demek arrow dan sonra yapılcak seyi vericez)
                         this.state.categories.map(category => (
                             // <ListGroupItem onClick={()=>this.setState({currentCategory: category.categoryName})} key={category.categoryId}>{category.categoryName}</ListGroupItem>
-                            <ListGroupItem onClick={()=>this.changeCategory(category)} key={category.categoryId}>{category.categoryName}</ListGroupItem>
+                            <ListGroupItem onClick={()=>this.props.changeCategory(category)} key={category.categoryId}>{category.categoryName}</ListGroupItem>
 
                         ))
                     }
@@ -49,7 +49,7 @@ export default class CategoryList extends Component {
                     {/*<ListGroupItem>sda</ListGroupItem>*/}
                     {/*<ListGroupItem>sda</ListGroupItem>*/}
                 </ListGroup>
-                <h4>{ this.state.currentCategory }</h4>
+                <h4>{ this.props.currentCategory }</h4>
             </div>
         );
     }

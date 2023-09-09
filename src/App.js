@@ -8,10 +8,13 @@ import {Col, Container, Row} from "reactstrap";
 // compoennttler arası veri tasımadan dolayı burası class compoentnte cevrildi yani export defaul yazıma
 export default class App extends Component{
 
-    //changecategry eski haliyleyazamıyorduk bu yuzden bunu cevirdik bu hale
+    state = { currentCategory: ""}
+
+    //changecategry eski haliyleyazamıyorduk bu yuzden bunu cevirdik bu hale, root elementtaen asagı state tasımak icini, yukarı tasıma olmaıdıgndan, category degisitirmeye yonelk her seyi app icine tasıdırk
     changeCategory = (category) => {
         this.setState({currentCategory: category.categoryName})
     }
+    //js de fonksiyonlarda bir degisken oldugunda props gibi bunu tasıyabiliriz altta ornegi var
 
     render() {
         //best practice encapsulation like class, dic
@@ -32,8 +35,8 @@ export default class App extends Component{
                         {/*<Col xs="9"><ProductList title="Product List"/></Col>*/}
                         {/*<Col xs="3"><CategoryList title={titleCategory}/></Col>*/}
                         {/*<Col xs="9"><ProductList title={titleProduct}/></Col>*/}
-                        <Col xs="3"><CategoryList info={categoryInfo}/></Col>
-                        <Col xs="9"><ProductList info={productInfo}/></Col>
+                        <Col xs="3"><CategoryList currentCategory={this.state.currentCategory} changeCategory={this.changeCategory} info={categoryInfo}/></Col>
+                        <Col xs="9"><ProductList currentCategory={this.state.currentCategory} info={productInfo}/></Col>
                     </Row>
                 </Container>
 
